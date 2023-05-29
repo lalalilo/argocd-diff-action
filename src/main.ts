@@ -207,7 +207,7 @@ async function run(): Promise<void> {
   const argocd = await setupArgoCDCommand();
   const apps = await getApps(argocd);
   if (apps.length === 0) {
-    core.error(
+    core.setFailed(
       `No apps found for repo: ${github.context.repo.owner}/${github.context.repo.repo} with target revision "master" or "main"`
     );
     return;
@@ -217,7 +217,7 @@ async function run(): Promise<void> {
   const diffs: Diff[] = [];
 
   await asyncForEach(apps, async app => {
-    const command = `app diff ${app.metadata.name} --local=${app.spec.source.path}`;
+    const command = `app diff ${app.metadata.name} --local=${app.spec.source.path} --server-side-generate`;
     try {
       core.info(`Running: argocd ${command}`);
       // ArgoCD app diff will exit 1 if there is a diff, so always catch,
