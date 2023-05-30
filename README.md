@@ -46,5 +46,5 @@ jobs:
 ## Publishing
 
 Build the script and commit to your branch:
-`npm run build && npm run pack`
+`yarn run build && yarn run pack`
 Commit the build output, and make a PR.
