@@ -51,4 +51,4 @@ Commit the build output, and make a PR.
 
 ## Issues
 
-This works for ArgoCD version up to 2.6.x , with ArgoCD version 2.7 this will no longer work as by default the `argocd app diff` will be done server side (for now it is not the default, it is only done if you pass the flag `--server-side-generate`). The server side diffing does not work for now, there is an ongoing issue to fix it : https://github.com/argoproj/argo-cd/issues/8145
+This works for ArgoCD version up to 2.6.x, with ArgoCD version 2.7 this will no longer work as by default the `argocd app diff` will be done server side (for now it is not the default, it is only done if you pass the flag `--server-side-generate`). The server side diffing does not work for now, there is an ongoing issue to fix it: https://github.com/argoproj/argo-cd/issues/8145
