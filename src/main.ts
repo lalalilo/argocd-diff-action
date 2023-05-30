@@ -18,8 +18,6 @@ interface App {
       repoURL: string;
       path: string;
       targetRevision: string;
-      kustomize: Object;
-      helm: Object;
     };
   };
   status: {
@@ -30,7 +28,6 @@ interface App {
 }
 const ARCH = process.env.ARCH || 'linux';
 const githubToken = core.getInput('github-token');
-core.info(githubToken);
 
 const ARGOCD_SERVER_URL = core.getInput('argocd-server-url');
 const ARGOCD_TOKEN = core.getInput('argocd-token');
@@ -40,7 +37,7 @@ const EXTRA_CLI_ARGS = core.getInput('argocd-extra-cli-args');
 const octokit = github.getOctokit(githubToken);
 
 async function execCommand(command: string, options: ExecOptions = {}): Promise<ExecResult> {
-  const p = new Promise<ExecResult>(async (done, failed) => {
+  const p = new Promise<ExecResult>((done, failed) => {
     exec(command, options, (err: ExecException | null, stdout: string, stderr: string): void => {
       const res: ExecResult = {
         stdout,
@@ -74,8 +71,6 @@ async function setupArgoCDCommand(): Promise<(params: string) => Promise<ExecRes
   );
   fs.chmodSync(path.join(argoBinaryPath), '755');
 
-  // core.addPath(argoBinaryPath);
-
   return async (params: string) =>
     execCommand(
       `${argoBinaryPath} ${params} --auth-token=${ARGOCD_TOKEN} --server=${ARGOCD_SERVER_URL} ${EXTRA_CLI_ARGS}`
@@ -87,7 +82,7 @@ async function getApps(argocd: (params: string) => Promise<ExecResult>): Promise
     `Getting list of apps for the repository ${github.context.repo.owner}/${github.context.repo.repo}`
   );
   let apps = new Array<App>();
-  let command = `app list -o json -r git@github.com:${github.context.repo.owner}/${github.context.repo.repo}`;
+  const command = `app list -o json -r git@github.com:${github.context.repo.owner}/${github.context.repo.repo}`;
 
   try {
     const res = await argocd(command);
@@ -157,7 +152,7 @@ ${diff}
 
   const output = scrubSecrets(`
 ## ArgoCD Diff for commit [\`${shortCommitSha}\`](${commitLink})
-_Updated at ${new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })} PT_
+_Updated at ${new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })} PT_
   ${diffOutput.join('\n')}
 
 | Legend | Status |
@@ -173,7 +168,9 @@ _Updated at ${new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angele
     repo
   });
 
-  const existingComment = commentsResponse.data.find(d => d.body!.includes('ArgoCD Diff for'));
+  const existingComment = commentsResponse.data.find(
+    d => d.body !== undefined && d.body.includes('ArgoCD Diff for')
+  );
 
   // Existing comments should be updated even if there are no changes this round in order to indicate that
   if (existingComment) {
