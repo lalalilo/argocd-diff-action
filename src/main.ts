@@ -84,7 +84,7 @@ async function getApps(argocd: (params: string) => Promise<ExecResult>): Promise
     `Getting list of apps for the repository ${github.context.repo.owner}/${github.context.repo.repo}`
   );
   let apps = new Array<App>();
-  let command = `app list -o json -r git@github.com:${github.context.repo.owner}/${github.context.repo.repo}`;
+  const command = `app list -o json -r git@github.com:${github.context.repo.owner}/${github.context.repo.repo}`;
 
   try {
     const res = await argocd(command);
@@ -170,7 +170,9 @@ _Updated at ${new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angele
     repo
   });
 
-  const existingComment = commentsResponse.data.find(d => d.body!.includes('ArgoCD Diff for'));
+  const existingComment = commentsResponse.data.find(
+    d => d.body !== undefined && d.body.includes('ArgoCD Diff for')
+  );
 
   // Existing comments should be updated even if there are no changes this round in order to indicate that
   if (existingComment) {
