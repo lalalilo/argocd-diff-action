@@ -2388,7 +2388,6 @@ const fs = __importStar(__webpack_require__(747));
 const path = __importStar(__webpack_require__(622));
 const ARCH = process.env.ARCH || 'linux';
 const githubToken = core.getInput('github-token');
-core.info(githubToken);
 const ARGOCD_SERVER_URL = core.getInput('argocd-server-url');
 const ARGOCD_TOKEN = core.getInput('argocd-token');
 const VERSION = core.getInput('argocd-version');
@@ -2426,7 +2425,6 @@ function setupArgoCDCommand() {
         const argoBinaryPath = 'bin/argo';
         yield tc.downloadTool(`https://github.com/argoproj/argo-cd/releases/download/${VERSION}/argocd-${ARCH}-amd64`, argoBinaryPath);
         fs.chmodSync(path.join(argoBinaryPath), '755');
-        // core.addPath(argoBinaryPath);
         return (params) => __awaiter(this, void 0, void 0, function* () {
             return execCommand(`${argoBinaryPath} ${params} --auth-token=${ARGOCD_TOKEN} --server=${ARGOCD_SERVER_URL} ${EXTRA_CLI_ARGS}`);
         });
@@ -2436,7 +2434,7 @@ function getApps(argocd) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info(`Getting list of apps for the repository ${github.context.repo.owner}/${github.context.repo.repo}`);
         let apps = new Array();
-        let command = `app list -o json -r git@github.com:${github.context.repo.owner}/${github.context.repo.repo}`;
+        const command = `app list -o json -r git@github.com:${github.context.repo.owner}/${github.context.repo.repo}`;
         try {
             const res = yield argocd(command);
             if (res.stdout) {
@@ -2507,7 +2505,7 @@ _Updated at ${new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angele
             owner,
             repo
         });
-        const existingComment = commentsResponse.data.find(d => d.body.includes('ArgoCD Diff for'));
+        const existingComment = commentsResponse.data.find(d => d.body !== undefined && d.body.includes('ArgoCD Diff for'));
         // Existing comments should be updated even if there are no changes this round in order to indicate that
         if (existingComment) {
             octokit.rest.issues.updateComment({
