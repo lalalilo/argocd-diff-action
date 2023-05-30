@@ -30,7 +30,6 @@ interface App {
 }
 const ARCH = process.env.ARCH || 'linux';
 const githubToken = core.getInput('github-token');
-core.info(githubToken);
 
 const ARGOCD_SERVER_URL = core.getInput('argocd-server-url');
 const ARGOCD_TOKEN = core.getInput('argocd-token');
@@ -73,8 +72,6 @@ async function setupArgoCDCommand(): Promise<(params: string) => Promise<ExecRes
     argoBinaryPath
   );
   fs.chmodSync(path.join(argoBinaryPath), '755');
-
-  // core.addPath(argoBinaryPath);
 
   return async (params: string) =>
     execCommand(
