@@ -223,11 +223,11 @@ async function run(): Promise<void> {
       await argocd(command);
     } catch (e) {
       const res = e as ExecResult;
-      core.info(`stdout: ${res.stdout}`);
-      core.info(`stderr: ${res.stderr}`);
       if (res.stdout) {
+        core.info(`stdout: ${res.stdout}`);
         diffs.push({ app, diff: res.stdout });
       } else {
+        core.error(`stderr: ${res.stderr}`);
         diffs.push({
           app,
           diff: '',
