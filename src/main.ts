@@ -18,8 +18,6 @@ interface App {
       repoURL: string;
       path: string;
       targetRevision: string;
-      kustomize: Object;
-      helm: Object;
     };
   };
   status: {
@@ -39,7 +37,7 @@ const EXTRA_CLI_ARGS = core.getInput('argocd-extra-cli-args');
 const octokit = github.getOctokit(githubToken);
 
 async function execCommand(command: string, options: ExecOptions = {}): Promise<ExecResult> {
-  const p = new Promise<ExecResult>(async (done, failed) => {
+  const p = new Promise<ExecResult>((done, failed) => {
     exec(command, options, (err: ExecException | null, stdout: string, stderr: string): void => {
       const res: ExecResult = {
         stdout,
