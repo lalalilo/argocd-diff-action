@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/quizlet/argocd-diff-action.git"
+    "url": "git+https://github.com/lalalilo/argocd-diff-action.git"
   },
   "keywords": [
     "actions",
@@ -23,7 +23,7 @@
     "setup",
     "argocd"
   ],
-  "author": "Quizlet",
+  "author": "Lalilo",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.4.0",
