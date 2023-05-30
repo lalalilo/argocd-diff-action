@@ -38,8 +38,8 @@ jobs:
 ## How it works
 
 1. Downloads the specified version of the ArgoCD binary, and makes it executable
-2. Connects to the ArgoCD API using the `argocd-token`, and gets all the apps
-3. Filters the apps to the ones that live in the current repo
+2. Uses the binary to run `argocd app list` to get all the apps associated with the current repository
+3. Filters the apps to only keep the ones synced to `master` or `main` branches
 4. Runs `argocd app diff` for each app
 5. Posts the diff output as a comment on the PR
 
@@ -48,3 +48,7 @@ jobs:
 Build the script and commit to your branch:
 `yarn run build && yarn run pack`
 Commit the build output, and make a PR.
+
+## Issues
+
+This works for ArgoCD version up to 2.6.x , with ArgoCD version 2.7 this will no longer work as by default the `argocd app diff` will be done server side (for now it is not the default, it is only done if you pass the flag `--server-side-generate`). The server side diffing does not work for now, there is an ongoing issue to fix it : https://github.com/argoproj/argo-cd/issues/8145
