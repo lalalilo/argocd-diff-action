@@ -1,8 +1,8 @@
 # ArgoCD Diff GitHub Action
 
-This action generates a diff between the current PR and the current state of the cluster. 
+This action generates a diff between the current PR and the current state of the cluster.
 
-Note that this includes any changes between your branch and latest `master`, as well as ways in which the cluster is out of sync. 
+Note that this includes any changes between your branch and latest `main`, as well as ways in which the cluster is out of sync.
 
 This is a fork of the original [argocd-diff-action](https://github.com/quizlet/argocd-diff-action) repository. This fork was created to update the github action in order for it to work with more recent versions of ArgoCD by removing the API call to get the list of ArgoCD apps and using the CLI instead.
 
@@ -14,7 +14,7 @@ name: ArgoCD Diff
 
 on:
   pull_request:
-    branches: [master, main]
+    branches: [main]
 
 jobs:
   argocd-diff:
@@ -25,7 +25,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - uses: lalalilo/argocd-diff-action@master
+      - uses: lalalilo/argocd-diff-action@main
         name: ArgoCD Diff
         with:
           argocd-server-url: argocd.example.com
@@ -39,7 +39,7 @@ jobs:
 
 1. Downloads the specified version of the ArgoCD binary, and makes it executable
 2. Uses the binary to run `argocd app list` to get all the apps associated with the current repository
-3. Filters the apps to only keep the ones synced to `master` or `main` branches
+3. Filters the apps to only keep the ones synced to `main` branch
 4. Runs `argocd app diff` for each app
 5. Posts the diff output as a comment on the PR
 
